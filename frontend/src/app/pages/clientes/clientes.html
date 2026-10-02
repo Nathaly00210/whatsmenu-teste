@@ -1,0 +1,64 @@
+<h1>Clientes</h1>
+
+<h2>
+  @if (clienteEditando !== null) {
+    Editar cliente
+  } @else {
+    Novo cliente
+  }
+</h2>
+
+<form (submit)="salvarCliente($event)">
+  <div>
+    <label for="nome">Nome:</label>
+    <input
+      id="nome"
+      type="text"
+      name="nome"
+      required
+      [(ngModel)]="nome"
+    />
+  </div>
+
+  <div>
+    <label for="telefone">Telefone:</label>
+    <input
+      id="telefone"
+      type="text"
+      name="telefone"
+      required
+      [(ngModel)]="telefone"
+    />
+  </div>
+
+  <button type="submit">
+    @if (clienteEditando !== null) {
+      Salvar alterações
+    } @else {
+      Cadastrar cliente
+    }
+  </button>
+
+  @if (clienteEditando !== null) {
+    <button type="button" (click)="limparFormulario()">
+      Cancelar
+    </button>
+  }
+</form>
+
+<hr>
+
+<h2>Lista de clientes</h2>
+
+<ul>
+  @for (cliente of clientes; track cliente.id) {
+    <li>
+      <strong>{{ cliente.nome }}</strong>
+      — {{ cliente.telefone }}
+
+      <button type="button" (click)="editarCliente(cliente)">
+        Editar
+      </button>
+    </li>
+  }
+</ul>

@@ -1,0 +1,76 @@
+<h1>Produtos</h1>
+
+<h2>
+  @if (produtoEditando !== null) {
+    Editar produto
+  } @else {
+    Novo produto
+  }
+</h2>
+
+<form (submit)="criarProduto($event)">
+  <div>
+    <label for="nome">Nome:</label>
+    <input
+      id="nome"
+      type="text"
+      name="nome"
+      required
+      [(ngModel)]="nome"
+    />
+  </div>
+
+  <div>
+    <label for="preco">Preço:</label>
+    <input
+      id="preco"
+      type="number"
+      name="preco"
+      step="0.01"
+      min="0"
+      required
+      [(ngModel)]="preco"
+    />
+  </div>
+
+  <button type="submit">
+    @if (produtoEditando !== null) {
+        Salvar alterações
+    } @else {
+        Cadastrar produto
+    }
+  </button>
+</form>
+
+<hr>
+
+<h2>Lista de produtos</h2>
+
+<p>Quantidade de produtos: {{ produtos.length }}</p>
+
+<ul>
+  @for (produto of produtos; track produto.id) {
+    <li>
+      <strong>{{ produto.nome }}</strong>
+      — R$ {{ produto.preco }}
+
+      @if (produto.ativo) {
+        <span>Ativo</span>
+      } @else {
+        <span>Inativo</span>
+      }
+
+      <button type="button" (click)="editarProduto(produto)">
+        Editar
+      </button>
+
+      <button type="button" (click)="alterarStatus(produto)">
+        @if (produto.ativo) {
+          Desativar
+        } @else {
+          Ativar
+        }
+      </button>
+    </li>
+  }
+</ul>

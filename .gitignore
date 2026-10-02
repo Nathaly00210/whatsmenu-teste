@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+backend/tmp/
+backend/database/*.sqlite
+backend/database/*.sqlite3
+
+frontend/.angular/
+frontend/dist/

@@ -1,0 +1,187 @@
+<h1>Pedidos</h1>
+
+<h2>Novo pedido</h2>
+
+<form (submit)="criarPedido($event)">
+
+  <div>
+    <label for="cliente">Cliente:</label>
+
+    <select
+      id="cliente"
+      name="cliente"
+      [(ngModel)]="clienteSelecionado"
+      required
+    >
+      <option [ngValue]="null">Selecione um cliente</option>
+
+      @for (cliente of clientes; track cliente.id) {
+        <option [ngValue]="cliente.id">
+          {{ cliente.nome }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <hr>
+
+  <h3>Adicionar produto</h3>
+
+  <div>
+    <label for="produto">Produto:</label>
+
+    <select
+      id="produto"
+      name="produto"
+      [(ngModel)]="produtoSelecionado"
+    >
+      <option [ngValue]="null">Selecione um produto</option>
+
+      @for (produto of produtos; track produto.id) {
+        <option [ngValue]="produto.id">
+          {{ produto.nome }} — R$ {{ produto.preco }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label for="quantidade">Quantidade:</label>
+
+    <input
+      id="quantidade"
+      type="number"
+      name="quantidade"
+      min="1"
+      [(ngModel)]="quantidade"
+    />
+  </div>
+
+  <button
+    type="button"
+    (click)="adicionarProduto()"
+  >
+    Adicionar produto
+  </button>
+
+  <hr>
+
+  <h3>Produtos do pedido</h3>
+
+  @if (itens.length === 0) {
+    <p>Nenhum produto adicionado.</p>
+  } @else {
+
+    <ul>
+      @for (item of itens; track item.produto_id) {
+        <li>
+          <strong>{{ item.nome }}</strong>
+          — {{ item.quantidade }} x R$ {{ item.preco }}
+          = R$ {{ item.total }}
+
+          <button
+            type="button"
+            (click)="removerProduto($index)"
+          >
+            Remover
+          </button>
+        </li>
+      }
+    </ul>
+
+    <p>
+      <strong>
+        Total: R$ {{ calcularTotal() }}
+      </strong>
+    </p>
+  }
+
+  <button
+    type="submit"
+    [disabled]="clienteSelecionado === null || itens.length === 0"
+  >
+    Finalizar pedido
+  </button>
+
+</form>
+
+<hr>
+
+<h2>Lista de pedidos</h2>
+
+@if (pedidos.length === 0) {
+  <p>Nenhum pedido cadastrado.</p>
+} @else {
+
+  <ul>
+    @for (pedido of pedidos; track pedido.id) {
+      <li>
+        <strong>Pedido #{{ pedido.id }}</strong>
+
+        — Cliente:
+        {{ pedido.cliente?.nome }}
+
+        — Data:
+        {{ pedido.createdAt | date:'dd/MM/yyyy HH:mm' }}
+
+        — Valor:
+        R$ {{ pedido.valorTotal }}
+
+        — Status:
+        {{ pedido.status }}
+
+        <div>
+
+          @if (pedido.status === 'Pendente') {
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Em preparação')"
+            >
+              Em preparação
+            </button>
+
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Cancelado')"
+            >
+              Cancelar
+            </button>
+          }
+
+          @if (pedido.status === 'Em preparação') {
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Pronto')"
+            >
+              Pronto
+            </button>
+
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Cancelado')"
+            >
+              Cancelar
+            </button>
+          }
+
+          @if (pedido.status === 'Pronto') {
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Finalizado')"
+            >
+              Finalizado
+            </button>
+
+            <button
+              type="button"
+              (click)="alterarStatus(pedido, 'Cancelado')"
+            >
+              Cancelar
+            </button>
+          }
+
+        </div>
+      </li>
+    }
+  </ul>
+}
